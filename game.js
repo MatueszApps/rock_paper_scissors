@@ -9,14 +9,11 @@ function getComputerChoice() {
     return choices[randomIndex];
 }
 
-function getHumanChoice(){
-    // take the input from the user
-    let userInput = prompt("Please enter your choice (rock, paper, or scissors):");
-    return userInput;
-}
+
 
 let humanScore = 0;
 let computerScore = 0;
+let result = document.getElementsByClassName('results');
 
 function playRound() {
     const choices = ['rock', 'paper', 'scissors'];
@@ -28,8 +25,9 @@ function playRound() {
         return;
     }
 
+
     if (humanChoice === computerChoice) {
-        console.log(`It's a tie! Both chose ${humanChoice}.`);
+        result.textContent = "It's a tie! Both choice ${humanChoice}";
     } else if (choices[(choices.indexOf(humanChoice) + 1) % 3] === computerChoice) {
         humanScore++;
         console.log(`Congratulations! Your ${humanChoice} beat ${computerChoice}.`);
