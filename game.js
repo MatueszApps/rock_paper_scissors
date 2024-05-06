@@ -1,61 +1,52 @@
 function getComputerChoice() {
-    // Array containing the choices
     const choices = ["rock", "paper", "scissors"];
-    
-    // Generate a random integer between 0 and 2
     const randomIndex = Math.floor(Math.random() * choices.length);
-    
-    // Return the choice corresponding to the random index
     return choices[randomIndex];
 }
 
-
-
 let humanScore = 0;
 let computerScore = 0;
-let result = document.getElementsByClassName('results');
+let result = document.querySelector('.results');
 
-function playRound() {
-    const choices = ['rock', 'paper', 'scissors'];
-    const computerChoice = choices[Math.floor(Math.random() * choices.length)];
-    const humanChoice = prompt("Choose rock, paper, or scissors:");
-
-    if (!choices.includes(humanChoice)) {
-        alert("Invalid choice, please choose rock, paper, or scissors.");
-        return;
-    }
-
+function playRound(humanChoice) {
+    const computerChoice = getComputerChoice();
 
     if (humanChoice === computerChoice) {
-        result.textContent = "It's a tie! Both choice ${humanChoice}";
-    } else if (choices[(choices.indexOf(humanChoice) + 1) % 3] === computerChoice) {
+        result.textContent = `It's a tie! Both chose ${humanChoice}.`;
+    } else if (['rock', 'paper', 'scissors'].indexOf(computerChoice) === (['rock', 'paper', 'scissors'].indexOf(humanChoice) + 1) % 3) {
         humanScore++;
-        console.log(`Congratulations! Your ${humanChoice} beat ${computerChoice}.`);
+        result.textContent = `Congratulations! Your ${humanChoice} beat ${computerChoice}. Score: ${humanScore}-${computerScore}`;
     } else {
         computerScore++;
-        console.log(`Oh no! Your ${humanChoice} lost with ${computerChoice}.`);
+        result.textContent = `Oh no! Your ${humanChoice} lost to ${computerChoice}. Score: ${humanScore}-${computerScore}`;
     }
 
     checkGameEnd();
 }
 
+function setupEventListeners() {
+    const buttons = document.querySelectorAll('button');
+    buttons.forEach(button => {
+        button.addEventListener("click", () => playRound(button.textContent.toLowerCase()));
+    });
+}
+
 function checkGameEnd() {
     if (humanScore === 5 || computerScore === 5) {
-        if (humanScore === 5) {
-            console.log("Game Over! You won the game!");
-        } else {
-            console.log("Game Over! Computer won the game!");
-        }
-
-        humanScore = 0;
-        computerScore = 0;
-        if (confirm("Do you want to play again?")) {
-            playRound();
-        }
-    } else {
-        playRound(); // Call playRound again to continue the game
+        result.textContent += ` Game Over! ${humanScore === 5 ? "You win!" : "Computer wins!"}`;
+        setTimeout(() => {
+            if (confirm("Do you want to play again?")) {
+                resetGame();
+            }
+        }, 100); // Opóźnienie o 100 ms przed wyświetleniem alertu
     }
 }
 
-playRound(); // Start the game
 
+function resetGame() {
+    humanScore = 0;
+    computerScore = 0;
+    result.textContent = "New game started! Choose your move.";
+}
+
+setupEventListeners();
